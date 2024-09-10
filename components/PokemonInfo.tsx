@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { ImageBackground, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 import { useCounter } from '@/hooks/useCounter';
@@ -18,39 +18,68 @@ export const PokemonInfo = () => {
         setName( response.name );
         setIde( response.id );
         setFront( response.sprites.front_default );
-        console.log(response);
     }
 
     useEffect(() => {
         getPokemonInfo( counter );
-    }, []);
+    }, [counter]);
     
 
     return (
-        <View 
+        <ImageBackground
             style={{ 
                 flex:1, 
-                justifyContent:"center", alignItems:"center" 
+                justifyContent:"center", 
+                alignItems:"center",
+            }}
+            source={{
+                uri:'https://img.freepik.com/free-vector/comic-style-background_23-2148827393.jpg'
             }}
         >
-            <Text variant='displayMedium'>
+            <Text 
+                variant='displayMedium'
+                style={{
+                    color: "indigo"
+                }}
+            >
                 { ide } - { name }
             </Text>
-            <Avatar.Image size={100} source={{ uri:front }} />
-            <View style={{ flexDirection: "row-reverse" }}>
+            <Avatar.Image 
+                size={120} 
+                source={{ uri:front }} 
+                style={{ backgroundColor:"darkorange" }}
+            />
+            <View 
+                style={{ 
+                    flexDirection: "row-reverse",
+                    width: "100%",
+                    justifyContent: "space-evenly"
+                }}
+            >
                 <Button 
                     mode="contained"
                     onPress={ () => increment() }
+                    icon="arrow-right"
+                    style={{
+                        backgroundColor: "darkblue",
+                    }}
+                    contentStyle={{
+                        flexDirection: "row-reverse"
+                    }}
                 >
                     Siguiente
                 </Button>
                 <Button 
                     mode="contained"
                     onPress={ () => decrement() }
+                    icon="arrow-left"
+                    style={{
+                        backgroundColor: "darkblue"
+                    }}
                 >
                     Anterior
                 </Button>
             </View>
-        </View>
+        </ImageBackground>
     )
 }
