@@ -1,29 +1,14 @@
 import { ImageBackground, View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-paper';
-import React, { useEffect, useState } from 'react';
 import { useCounter } from '@/hooks/useCounter';
+import { LoadingMessage } from './LoadingMessage';
+import { useFetch } from '@/hooks/useFetch';
+import { PokemonCard } from './PokemonCard';
 
 export const PokemonInfo = () => {
 
-    const [name, setName] = useState('');
-    const [ide, setIde] = useState('');
-    const [front, setFront] = useState('');
-
-    const { counter, increment, decrement } = useCounter();
-
-    const getPokemonInfo = async( id=1 ) => {
-        const url = 'https://pokeapi.co/api/v2/pokemon/' + id;
-        const request = await fetch(url);
-        const response = await request.json();
-        setName( response.name );
-        setIde( response.id );
-        setFront( response.sprites.front_default );
-    }
-
-    useEffect(() => {
-        getPokemonInfo( counter );
-    }, [counter]);
-    
+    const { counter, increment, decrement } = useCounter(1);
+    const { data, isLoading, hasError } = useFetch('https://pokeapi.co/api/v2/pokemon/' + counter);
 
     return (
         <ImageBackground
@@ -36,24 +21,29 @@ export const PokemonInfo = () => {
                 uri:'https://img.freepik.com/free-vector/comic-style-background_23-2148827393.jpg'
             }}
         >
-            <Text 
-                variant='displayMedium'
-                style={{
-                    color: "indigo"
-                }}
-            >
-                { ide } - { name }
-            </Text>
-            <Avatar.Image 
-                size={120} 
-                source={{ uri:front }} 
-                style={{ backgroundColor:"darkorange" }}
-            />
+
+            {
+                isLoading
+                ? <LoadingMessage />
+                : <PokemonCard
+                    ide={ counter }
+                    name={ data?.name }
+                    sprites={[
+                        data.sprites.front_default,
+                        data.sprites.back_default,
+                        data.sprites.front_shiny,
+                        data.sprites.back_shiny,
+                    ]}
+                    />
+            }
+
+            
             <View 
                 style={{ 
                     flexDirection: "row-reverse",
                     width: "100%",
-                    justifyContent: "space-evenly"
+                    justifyContent: "space-evenly",
+                    marginTop: 15,
                 }}
             >
                 <Button 
@@ -71,7 +61,7 @@ export const PokemonInfo = () => {
                 </Button>
                 <Button 
                     mode="contained"
-                    onPress={ () => decrement() }
+                    onPress={ () => counter>1 ? decrement() : null }
                     icon="arrow-left"
                     style={{
                         backgroundColor: "darkblue"
