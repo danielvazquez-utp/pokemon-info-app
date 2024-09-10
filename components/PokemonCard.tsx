@@ -1,6 +1,8 @@
 import { Text, Avatar, Divider } from "react-native-paper";
 import { View } from "react-native";
 import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import { useCallback } from "react";
 
 interface pokeProps {
     ide: number,
@@ -8,12 +10,24 @@ interface pokeProps {
     sprites: any,
 }
 
+SplashScreen.preventAutoHideAsync();
+
 export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
 
     const [ isLoaded ] = useFonts({
-        'Psilograph-Black': require('../assets/fonts/Psilograph-Black.ttf'),
-        'Psilograph-Regular': require('../assets/fonts/Psilograph-Regular.ttf'),
+        'PsilographBlack': require('../assets/fonts/Psilograph-Black.ttf'),
+        'PsilographRegular': require('../assets/fonts/Psilograph-Regular.ttf'),
     });
+
+    const handleOnLayout = useCallback(async () => {
+        if (isLoaded) {
+            await SplashScreen.hideAsync(); //hide the splashscreen
+        }
+    }, [isLoaded]);
+
+    if (!isLoaded) {
+        return null;
+    }
 
   return (
     <>
@@ -25,7 +39,7 @@ export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
                 fontSize: 180,
                 textTransform: "capitalize",               
                 marginBottom: 35,
-                fontFamily: 'Psilograph-Regular'
+                fontFamily: 'PsilographRegular'
             }}
         >
             {  name }
@@ -37,6 +51,7 @@ export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
             style={{
                 flexDirection: "row"
             }}
+            onLayout={ handleOnLayout }
         >
             <View style={{
                 flex: 3,
@@ -50,7 +65,7 @@ export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
                         color: "gray",
                         fontWeight: "heavy",
                         fontSize: 550,
-                        fontFamily: 'Psilograph-Regular'
+                        fontFamily: 'PsilographRegular'
                     }}
                 >
                     {ide}
