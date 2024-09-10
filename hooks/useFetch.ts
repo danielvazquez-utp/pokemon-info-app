@@ -43,7 +43,7 @@ export const useFetch = ( url:string ) => {
         setLoadingState();
         const response = await fetch( url );
 
-        await new Promise( resolve => setTimeout(resolve, 750) );
+        await new Promise( resolve => setTimeout(resolve, 350) );
 
         if (!response.ok) {
             setState({

@@ -1,5 +1,6 @@
 import { Text, Avatar, Divider } from "react-native-paper";
 import { View } from "react-native";
+import { useFonts } from 'expo-font';
 
 interface pokeProps {
     ide: number,
@@ -8,17 +9,23 @@ interface pokeProps {
 }
 
 export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
+
+    const [ isLoaded ] = useFonts({
+        'Psilograph-Black': require('../assets/fonts/Psilograph-Black.ttf'),
+        'Psilograph-Regular': require('../assets/fonts/Psilograph-Regular.ttf'),
+    });
+
   return (
     <>
-        
         <Text
             variant='displayMedium'
             style={{
                 color: "darkred",
                 fontWeight: "heavy",
-                fontSize: 80,
+                fontSize: 180,
                 textTransform: "capitalize",               
-                marginBottom: 15
+                marginBottom: 35,
+                fontFamily: 'Psilograph-Regular'
             }}
         >
             {  name }
@@ -34,14 +41,16 @@ export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
             <View style={{
                 flex: 3,
                 justifyContent: "center",
-                alignItems: "flex-end"
+                alignItems: "flex-end",
+                paddingTop: 80
             }}>
                 <Text
                     variant='displayLarge'
                     style={{
-                        color: "darkred",
+                        color: "gray",
                         fontWeight: "heavy",
-                        fontSize: 150
+                        fontSize: 550,
+                        fontFamily: 'Psilograph-Regular'
                     }}
                 >
                     {ide}
@@ -49,6 +58,7 @@ export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
             </View>
             <View style={{
                 flex: 3,
+                alignItems: "center"
             }}>
                 {
                     sprites.map( (sprite: string, index: any) => {
@@ -59,6 +69,7 @@ export const PokemonCard = ({ ide, name, sprites }:pokeProps) => {
                                 source={{ uri: sprite }}
                                 style={{ 
                                     backgroundColor: "darkorange",
+                                    margin: 2,
                                 }}
                             />
                         )
