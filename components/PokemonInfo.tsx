@@ -1,29 +1,17 @@
 import { View } from 'react-native';
 import { Avatar, Button, Text } from 'react-native-paper';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCounter } from '@/hooks/useCounter';
+import { useFetch } from '@/hooks/useFetch';
+import { PokemonCard } from './PokemonCard';
 
 export const PokemonInfo = () => {
 
-    const [name, setName] = useState('');
-    const [ide, setIde] = useState('');
-    const [front, setFront] = useState('');
-
     const { counter, increment, decrement } = useCounter();
+    const { data, isLoading, hasError } = useFetch( 'https://pokeapi.co/api/v2/pokemon/' + counter );
 
-    const getPokemonInfo = async( id=1 ) => {
-        const url = 'https://pokeapi.co/api/v2/pokemon/' + id;
-        const request = await fetch(url);
-        const response = await request.json();
-        setName( response.name );
-        setIde( response.id );
-        setFront( response.sprites.front_default );
-        console.log(response);
-    }
+    console.log({data: data, url: 'https://pokeapi.co/api/v2/pokemon/' + counter});
 
-    useEffect(() => {
-        getPokemonInfo( counter );
-    }, []);
     
 
     return (
@@ -33,10 +21,19 @@ export const PokemonInfo = () => {
                 justifyContent:"center", alignItems:"center" 
             }}
         >
-            <Text variant='displayMedium'>
-                { ide } - { name }
-            </Text>
-            <Avatar.Image size={100} source={{ uri:front }} />
+            
+
+            <PokemonCard
+                id={ data.id }
+                name={ data.name }
+                sprites={[
+                    data.sprites.back_default,
+                    data.sprites.front_default,
+                    data.sprites.back_shiny,
+                    data.sprites.front_shiny,
+                ]}
+            />
+
             <View style={{ flexDirection: "row-reverse" }}>
                 <Button 
                     mode="contained"
